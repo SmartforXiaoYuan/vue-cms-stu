@@ -31,9 +31,25 @@ module.exports = {
   chainWebpack: (config) => {
     // 打包添加哈希值，清除浏览器缓存
     config.output.filename('js/[name].[hash].js').end()
-    // config.resolve.alias
-    //   .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
-    //   .set('_c', resolve('src/components'))
+    config.resolve.alias
+      .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
+      .set('_c', resolve('src/components'))
+
+    config.module
+      .rule('svg')
+      .exclude.add(resolve('src/static/icons'))
+      .end()
+    config.module
+      .rule('icons')
+      .test(/\.svg$/)
+      .include.add(resolve('src/static/icons'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+      .end()
   },
   // 打包时不生成.map文件
   productionSourceMap: false,

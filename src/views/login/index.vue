@@ -4,12 +4,12 @@
       <h3 class="title">登录</h3>
       <el-form-item prop="userName">
         <el-input v-model="loginForm.userName" type="text" auto-complete="off" placeholder="账号">
-          <!-- <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" /> -->
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码">
-          <!-- <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" /> -->
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
       <el-form-item prop="captcha">
@@ -34,7 +34,7 @@ import { _getCodeImg } from '@/api/login'
 
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
       codeHtml: '',
       cookiePassword: '',
@@ -43,33 +43,28 @@ export default {
         password: '123456',
         rememberMe: false,
         captcha: '',
-        uuid: ''
+        uuid: '',
       },
       loginRules: {
-        userName: [
-          { required: true, trigger: 'blur', message: '用户名不能为空' }
-        ],
-        password: [
-          { required: true, trigger: 'blur', message: '密码不能为空' }
-        ],
-        captcha: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
+        userName: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],
+        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
+        captcha: [{ required: true, trigger: 'change', message: '验证码不能为空' }],
       },
       loading: false,
-      redirect: undefined
+      redirect: undefined,
     }
   },
-  created () {
+  created() {
     this.getCode()
   },
   methods: {
-    getCode () {
-      _getCodeImg().then(res => {
+    getCode() {
+      _getCodeImg().then((res) => {
         console.log(res)
         this.codeHtml = res.data
       })
     },
-
-  }
+  },
 }
 </script>
 
@@ -81,7 +76,7 @@ export default {
   background-size: cover;
   box-sizing: border-box;
   justify-content: flex-end;
-  background-image: url("../../assets/login-bg.jpg");
+  background-image: url('../../assets/login-bg.jpg');
 }
 .title {
   margin: 0px auto 30px auto;
