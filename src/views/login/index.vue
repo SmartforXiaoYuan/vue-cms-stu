@@ -20,7 +20,7 @@
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0 0 25px 0;">记住密码</el-checkbox>
       <el-form-item style="width:100%;">
-        <el-button :loading="loading" size="medium" type="primary" style="width:100%;">
+        <el-button :loading="loading" size="medium" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
@@ -31,7 +31,8 @@
 
 <script>
 import { _getCodeImg } from '@/api/login'
-
+import Cookies from 'js-cookie'
+import { encrypt, decrypt } from '@/libs/jsencrypt'
 export default {
   name: 'Login',
   data() {
@@ -62,6 +63,36 @@ export default {
       _getCodeImg().then((res) => {
         console.log(res)
         this.codeHtml = res.data
+      })
+    },
+
+    handleLogin() {
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          this.loading = true
+          if (this.loginForm.rememberMe) {
+            Cookies.set('userName', this.loginForm.userName, { expires: 30 })
+            Cookies.set('password', encrypt(this.loginForm.password), { expires: 30 })
+            Cookies.set('rememberMe', this.loginForm.rememberMe, { expires: 30 })
+          } else {
+            Cookies.remove('userName')
+            Cookies.remove('password')
+            Cookies.remove('rememberMe')
+          }
+          this.loginForm.userName = this.loginForm.userName.trim()
+          this.$store
+            .dispatch('Login', this.loginForm)
+            .then(() => {
+              this.loading = false
+              this.$router.push({
+                path: '/layout/home',
+              })
+            })
+            .catch(() => {
+              this.loading = false
+              this.getCode()
+            })
+        }
       })
     },
   },
