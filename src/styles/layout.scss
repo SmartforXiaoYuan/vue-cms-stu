@@ -1,0 +1,131 @@
+#app {
+    .layout {
+      background-color: #f0f3f4;
+      min-width: 1200px;
+    }
+  
+    .el-scrollbar {
+      height: 100%;
+  
+      .el-scrollbar__wrap {
+        overflow-x: hidden !important;
+      }
+    }
+    .el-dialog__wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .el-dialog{
+        margin: auto !important;
+      }
+      &::-webkit-scrollbar {
+        /*滚动条整体样式*/
+        width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+      }
+  
+      &::-webkit-scrollbar-thumb {
+        /*滚动条里面小方块*/
+        border-radius: 10px;
+        box-shadow: inset 0 0 5px rgba(144,147,153,.5);
+        background: rgba(144,147,153,.5);
+      }
+  
+      &::-webkit-scrollbar-track {
+        /*滚动条里面轨道*/
+        box-shadow: inset 0 0 5px rgba(144,147,153,.5);
+        border-radius: 10px;
+        background: #ededed;
+      }
+    }
+  
+    .el-header {
+      height: 50px !important;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      .header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+  
+      .header-l {
+        display: flex;
+        align-items: center;
+  
+        .open-icon {
+          display: flex;
+          align-items: center;
+  
+          i {
+            font-size: 22px;
+            margin-right: 12px;
+            cursor: pointer;
+          }
+        }
+      }
+  
+      .header-r {
+        display: flex;
+        align-items: center;
+      }
+    }
+  
+    .el-aside {
+      width: auto !important;
+      height: 100vh;
+      color: rgb(181, 182, 189);
+      background-color: #3a3f51;
+      box-sizing: border-box;
+  
+      .el-menu {
+        border: none;
+      }
+  
+      .sidebar {
+        width: 220px;
+        transition: width 0.3s;
+  
+        .menu-title {
+          text-align: center;
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          i {
+            font-size: 26px;
+            color: #fff;
+            margin-right: 10px;
+          }
+          span {
+            font-weight: bold;
+            color: #fff;
+          }
+        }
+      }
+    }
+  
+    .el-container {
+      .el-main {
+        height: 90vh !important;
+        padding: 0 !important;
+  
+        .page-main {
+          padding: 20px;
+        }
+      }
+    }
+  
+    .sidebarCloseWidth {
+      width: 64px !important;
+    }
+  
+    .el-icon-s-opportunity {
+      color: #ffc107;
+      margin-bottom: 16px;
+    }
+  }
+  
