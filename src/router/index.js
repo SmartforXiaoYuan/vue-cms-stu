@@ -32,6 +32,55 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/layout'),
   },
+  {
+    path: '/user',
+    component: (resolve) => require(['@/views/layout'], resolve),
+    hidden: false,
+    children: [
+      {
+        path: 'profile',
+        component: (resolve) => require(['@/views/system/user/index'], resolve),
+        name: 'Profile',
+        meta: { title: '个人中心', icon: 'user', menuType: 'C' }
+      }
+    ]
+  },
+  {
+    path: '/error',
+    component: () => import('../views/layout'),
+    name: 'Error',
+    redirect: '/error/404',
+    children: [
+      {
+        path: '404',
+        name: 'Page404',
+        component: () => import('@/views/error-page'),
+        meta: { title: '404', icon: 'el-icon-s-release' }
+      }
+    ]
+  },
+]
+
+/* async routers */
+export const asyncRoutes = [
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: Layout,
+  //   redirect: '/dashbord',
+  //   children: [
+  //     {
+  //       path: 'dashbord',
+  //       name: 'Dashbord',
+  //       component: () => import('@/views/dashboard'),
+  //       meta: {
+  //         title: '首页',
+  //         icon: 'el-icon-s-data'
+  //       }
+  //     }
+  //   ]
+  // },
+
 ]
 
 const router = new VueRouter({
