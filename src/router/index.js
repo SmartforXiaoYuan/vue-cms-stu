@@ -5,6 +5,19 @@ import store from '@/store'
 
 Vue.use(VueRouter)
 
+
+/**
+ * 路由相关属性说明
+ * hidden: 当设置hidden为true时，意思不在sideBars侧边栏中显示
+ * mete{
+ *  title: xxx,  设置sideBars侧边栏名称
+ *  icon: xxx,  设置ideBars侧边栏图标
+ *  noCache: true  当设置为true时不缓存该路由页面
+ * }
+ */
+
+
+/* common routers */
 export const currencyRoutes = [
   {
     path: '/login',
@@ -40,7 +53,6 @@ export const currencyRoutes = [
     path: '/system',
     name: 'System',
     component: (resolve) => require(['../views/layout'], resolve),
-    // redirect: '/system',
     meta: {
       title: '系统管理',
       icon: 'el-icon-s-tools',
@@ -86,7 +98,6 @@ export const currencyRoutes = [
     // component: () => import('../views/layout'),
     component: (resolve) => require(['../views/layout'], resolve),
     name: 'Error',
-    // redirect: '/error/404',
     children: [
       {
         path: '404',

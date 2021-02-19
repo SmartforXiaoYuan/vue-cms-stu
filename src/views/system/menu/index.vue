@@ -122,7 +122,7 @@ import IconSelect from '@/components/IconSelect'
 export default {
   name: 'Menu',
   components: { Treeselect, IconSelect },
-  data () {
+  data() {
     return {
       // 菜单表格树数据
       menuList: [],
@@ -142,74 +142,68 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        title: [
-          { required: true, message: '菜单名称不能为空', trigger: 'blur' }
-        ],
-        orderNum: [
-          { required: true, message: '菜单顺序不能为空', trigger: 'blur' }
-        ],
-        path: [
-          { required: true, message: '路由地址不能为空', trigger: 'blur' }
-        ],
-        component: [
-          { required: true, message: '组件不能为空', trigger: 'blur' }
-        ]
-      }
+        title: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
+        orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
+        path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
+        component: [{ required: true, message: '组件不能为空', trigger: 'blur' }],
+      },
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   methods: {
     // 选择图标
-    selected (name) {
+    selected(name) {
       this.form.icon = name
     },
     /** 查询菜单列表 */
-    getList () {
-      getMenu().then(res => {
+    getList() {
+      getMenu().then((res) => {
         console.log(res.data.code)
         console.log(res.data)
         this.menuList = this.handleTree(res.data.data.rows, 'id', 'parentId').tree
       })
     },
     /** 转换菜单数据结构 */
-    normalizer (node) {
+    normalizer(node) {
       if (node.children && !node.children.length) {
         delete node.children
       }
       return {
         id: node.id,
         label: node.title,
-        children: node.children
+        children: node.children,
       }
     },
     /** 查询菜单下拉树结构 */
-    getTreeselect () {
-      getMenu().then(res => {
+    getTreeselect() {
+      getMenu().then((res) => {
+        console.log(res)
+        console.log(res.data.rows)
         this.menuOptions = [
           {
             id: 0,
             title: '主目录',
-            children: this.handleTree(res.data.rows, 'id').tree
-          }
+            children: this.handleTree(res.data.rows, 'id').tree,
+          },
         ]
       })
     },
     // 菜单状态字典翻译
-    statusFormat (row, column) {
+    statusFormat(row, column) {
       // if (row.menuType === 'F') {
       //   return ''
       // }
       return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
-    cancel () {
+    cancel() {
       this.open = false
       this.reset()
     },
     // 表单重置
-    reset () {
+    reset() {
       this.form = {
         id: undefined,
         parentId: 0,
@@ -219,16 +213,16 @@ export default {
         orderNum: undefined,
         isFrame: '1',
         visible: '1',
-        status: '1'
+        status: '1',
       }
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
-    handleQuery () {
+    handleQuery() {
       this.getList()
     },
     /** 新增按钮操作 */
-    handleAdd (row) {
+    handleAdd(row) {
       this.reset()
       this.getTreeselect()
       if (row != null) {
@@ -238,10 +232,10 @@ export default {
       this.title = '添加菜单'
     },
     /** 修改按钮操作 */
-    handleUpdate (row) {
+    handleUpdate(row) {
       this.reset()
       this.getTreeselect()
-      getMenuById(row.id).then(res => {
+      getMenuById(row.id).then((res) => {
         this.form = res.data
         this.open = true
         this.title = '修改菜单'
@@ -249,17 +243,17 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
           if (this.form.id !== undefined) {
-            updateMenu(this.form).then(res => {
+            updateMenu(this.form).then((res) => {
               this.$httpResponse(res.message)
               this.open = false
               this.getList()
             })
           } else {
-            this.form.roleIds = this.$store.state.user.userInfo.user.roles.map(item => item.id)
-            addMenu(this.form).then(res => {
+            this.form.roleIds = this.$store.state.user.userInfo.user.roles.map((item) => item.id)
+            addMenu(this.form).then((res) => {
               this.$httpResponse(res.message)
               this.open = false
               this.getList()
@@ -269,18 +263,21 @@ export default {
       })
     },
     /** 删除按钮操作 */
-    handleDelete (row) {
+    handleDelete(row) {
       this.$confirm('是否确认删除名称为"' + row.title + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function () {
-        return delMenu(row.id)
-      }).then(() => {
-        this.getList()
-        this.$httpResponse('删除成功')
-      }).catch(function () { })
-    }
-  }
+        type: 'warning',
+      })
+        .then(function () {
+          return delMenu(row.id)
+        })
+        .then(() => {
+          this.getList()
+          this.$httpResponse('删除成功')
+        })
+        .catch(function () {})
+    },
+  },
 }
 </script>

@@ -4,7 +4,7 @@ export default {
   inserted(el, binding, vnode) {
     const { value } = binding
     const allPermission = '*:*:*'
-    const permissions = store.getters && [] //store.getters.userInfo.permissions  暂无权限TODO
+    const permissions = store.getters && ["*:*:*"] //store.getters.userInfo.permissions  暂无权限TODO
 
     if (value && value instanceof Array && value.length > 0) {
       const permissionFlag = value
