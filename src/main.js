@@ -20,6 +20,15 @@ import '@/static/icons'
 
 // import './static/styles/markdown.scss' // 引入代码高亮的css
 
+
+
+//解决路由跳转报错问题 详情https://blog.csdn.net/weixin_47084275/article/details/108205775
+import Router from 'vue-router'
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.prototype.resetForm = resetForm // 重置表单
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.dateFormatter = dateFormatter // 格式日期

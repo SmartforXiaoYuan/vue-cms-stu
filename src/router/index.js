@@ -4,21 +4,6 @@ import { getToken } from '@/libs/auth'
 import store from '@/store'
 
 Vue.use(VueRouter)
-//解决编程式路由往同一地址跳转时会报错的情况
-const originalPush = VueRouter.prototype.push
-const originalReplace = VueRouter.prototype.replace
-//push
-VueRouter.prototype.push = function push(location, onResolve, onReject) {
-  if (onResolve || onReject)
-    return originalPush.call(this, location, onResolve, onReject)
-  return originalPush.call(this, location).catch((err) => err)
-}
-//replace
-VueRouter.prototype.replace = function push(location, onResolve, onReject) {
-  if (onResolve || onReject)
-    return originalReplace.call(this, location, onResolve, onReject)
-  return originalReplace.call(this, location).catch((err) => err)
-}
 
 export const currencyRoutes = [
   {
@@ -54,7 +39,7 @@ export const currencyRoutes = [
   {
     path: '/system',
     name: 'System',
-    component: () => import('../views/layout'),
+    component: (resolve) => require(['../views/layout'], resolve),
     // redirect: '/system',
     meta: {
       title: '系统管理',
@@ -64,7 +49,7 @@ export const currencyRoutes = [
       {
         path: 'menu',
         name: 'Menu',
-        component: () => import('@/views/system/menu'),
+        component: (resolve) => require(['@/views/system/menu'], resolve),
         meta: {
           title: '菜单管理',
           icon: 'el-icon-menu',
@@ -73,7 +58,8 @@ export const currencyRoutes = [
       {
         path: 'role',
         name: 'Role',
-        component: () => import('@/views/system/role'),
+        // component: () => import('@/views/system/role'),
+        component: (resolve) => require(['@/views/system/role'], resolve),
         meta: {
           title: '角色管理',
           icon: 'el-icon-s-custom',
@@ -97,14 +83,16 @@ export const currencyRoutes = [
   },
   {
     path: '/error',
-    component: () => import('../views/layout'),
+    // component: () => import('../views/layout'),
+    component: (resolve) => require(['../views/layout'], resolve),
     name: 'Error',
     // redirect: '/error/404',
     children: [
       {
         path: '404',
         name: 'Page404',
-        component: () => import('@/views/error-page'),
+        // component: () => import('@/views/error-page'),
+        component: (resolve) => require(['@/views/error-page'], resolve),
         meta: { title: '404', icon: 'el-icon-s-release' },
       },
     ],
