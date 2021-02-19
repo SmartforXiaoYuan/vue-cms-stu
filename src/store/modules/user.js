@@ -7,6 +7,7 @@ const user = {
     token: getToken(),
     frontUserInfo: null,
     userInfo: null,
+    roles: [],
   },
 
   mutations: {
@@ -16,6 +17,9 @@ const user = {
     SET_USERINFO: (state, userInfo) => {
       state.userInfo = userInfo
     },
+    SET_ROLES(state, payload) {
+      state.roles = payload
+    },
   },
 
   actions: {
@@ -24,7 +28,7 @@ const user = {
       return new Promise((resolve, reject) => {
         _login(params)
           .then((res) => {
-            if (res.code === 200014) {
+            if (res.data.code === 200014) {
               Message({
                 type: 'error',
                 message: res.msg,
@@ -38,6 +42,19 @@ const user = {
           .catch((error) => {
             reject(error)
           })
+      })
+    },
+
+    // 获取角色权限信息
+    getUserRoles({ commit }) {
+      return new Promise((resolve, reject) => {
+        try {
+          let roles = ['Permission', 'PageAdmin']
+          commit('SET_ROLES', roles)
+          resolve(roles)
+        } catch (err) {
+          reject(err)
+        }
       })
     },
 

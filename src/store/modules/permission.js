@@ -2,17 +2,24 @@ import { asyncRoutes, currencyRoutes } from '@/router'
 
 // 遍历asyncRoutes动态路由
 function forSearchArr(route, roles) {
+  console.log(route)
   let arrNew = []
   for (let item of route) {
     let itemNew = {
       ...item,
     } // 解决浅拷贝共享同一内存地址
+    console.log(itemNew.name)
+    console.log('同一内存地址')
     if (roles.includes(itemNew.name)) {
       if (itemNew.children) {
         itemNew.children = forSearchArr(itemNew.children, roles)
       }
       arrNew.push(itemNew)
     }
+    // if (itemNew.children) {
+    //   itemNew.children = forSearchArr(itemNew.children, roles)
+    // }
+    // arrNew.push(itemNew)
   }
   return arrNew
 }
@@ -25,12 +32,15 @@ const state = {
 const mutations = {
   SET_ROUTES(state, payload) {
     state.routes = [...currencyRoutes, ...payload]
+    // console.log('我是 mutations')
     state.addRoutes = payload
   },
 }
 
 const actions = {
   getAsyncRoutes({ commit, rootGetters }, roles) {
+    console.log('我是action')
+    console.log(rootGetters)
     return new Promise((resolve) => {
       let routes = []
       if (rootGetters.userName === 'admin') {

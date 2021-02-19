@@ -22,9 +22,10 @@ export default {
 
   computed: {
     ...mapGetters(['routes', 'addRoutes', 'opened']),
-
     // 默认激活项
     activeMenu () {
+      console.log(this.$store.state.app.opened);
+      //   console.log(routes);
       return this.$route.path
     }
   }
