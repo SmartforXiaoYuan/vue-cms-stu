@@ -1,6 +1,6 @@
 import axios from '@/libs/api.request'
 
-// 获取路由
+// 获取菜单
 export const getMenu = () => {
   return axios.request({
     url: '/menu',
@@ -33,7 +33,7 @@ export const addMenu = (info) => {
 
 export const updateMenu = (info) => {
   return axios.request({
-    url: '/menu',
+    url: '/menu/' + info.id,
     method: 'put',
     data: info,
   })

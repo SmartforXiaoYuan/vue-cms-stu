@@ -5,7 +5,6 @@ import store from '@/store'
 
 Vue.use(VueRouter)
 
-
 /**
  * 路由相关属性说明
  * hidden: 当设置hidden为true时，意思不在sideBars侧边栏中显示
@@ -15,7 +14,6 @@ Vue.use(VueRouter)
  *  noCache: true  当设置为true时不缓存该路由页面
  * }
  */
-
 
 /* common routers */
 export const currencyRoutes = [
@@ -68,6 +66,16 @@ export const currencyRoutes = [
         },
       },
       {
+        path: 'dict',
+        name: 'Dict',
+        // component: () => import('@/views/system/role'),
+        component: (resolve) => require(['@/views/system/dict'], resolve),
+        meta: {
+          title: '字段管理',
+          icon: 'el-icon-document',
+        },
+      },
+      {
         path: 'role',
         name: 'Role',
         // component: () => import('@/views/system/role'),
@@ -90,6 +98,19 @@ export const currencyRoutes = [
             meta: { title: '个人中心', icon: 'user', menuType: 'C' },
           },
         ],
+      },
+    ],
+  },
+  {
+    path: '/dict',
+    component: (resolve) => require(['@/views/layout'], resolve),
+    hidden: true,
+    children: [
+      {
+        path: 'type/data/:id(\\d+)',
+        component: (resolve) => require(['@/views/system/dict/data'], resolve),
+        name: 'Data',
+        meta: { title: '字典数据', icon: '', menuType: 'C' },
       },
     ],
   },

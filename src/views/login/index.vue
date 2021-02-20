@@ -35,7 +35,7 @@ import Cookies from 'js-cookie'
 import { encrypt, decrypt } from '@/libs/jsencrypt'
 export default {
   name: 'Login',
-  data() {
+  data () {
     return {
       codeHtml: '',
       cookiePassword: '',
@@ -55,18 +55,18 @@ export default {
       redirect: undefined,
     }
   },
-  created() {
+  created () {
     this.getCode()
   },
   methods: {
-    getCode() {
+    getCode () {
       _getCodeImg().then((res) => {
         console.log(res)
-        this.codeHtml = res.data
+        this.codeHtml = res
       })
     },
 
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
@@ -107,7 +107,7 @@ export default {
   background-size: cover;
   box-sizing: border-box;
   justify-content: flex-end;
-  background-image: url('../../assets/login-bg.jpg');
+  background-image: url("../../assets/login-bg.jpg");
 }
 .title {
   margin: 0px auto 30px auto;
