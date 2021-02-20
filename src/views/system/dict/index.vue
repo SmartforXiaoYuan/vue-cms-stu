@@ -225,4 +225,19 @@ export default {
   }
 }
 </script>
->
+
+<style>
+a {
+  text-decoration: none;
+}
+
+.router-link-active {
+  text-decoration: none;
+}
+
+.link-type,
+.link-type:focus {
+  color: #337ab7;
+  cursor: pointer;
+}
+</style>
