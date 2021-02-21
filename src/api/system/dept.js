@@ -36,7 +36,7 @@ export const addDept = (info) => {
 // 修改
 export const updateDept = (info) => {
   return axios.request({
-    url: '/department/' + info.id,
+    url: '/department/' + info.deptId,
     method: 'put',
     data: info
   })
