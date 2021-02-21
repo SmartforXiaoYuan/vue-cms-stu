@@ -4,6 +4,7 @@
     <template v-if="hasOnlyChild(item.children, item)">
       <el-menu-item v-if="childItem.meta" :index="resolvePath(childItem.path)">
         <i :class="childItem.meta.icon ? childItem.meta.icon : ''"></i>
+        <!-- <svg-icon :icon-class="childItem.meta.icon ? childItem.meta.icon : ''" /> -->
         <span slot="title">{{ childItem.meta.title }}</span>
       </el-menu-item>
     </template>
@@ -26,30 +27,30 @@ import { Fragment } from 'vue-fragment'
 export default {
   name: 'SidebarItem',
   components: {
-    Fragment
+    Fragment,
   },
   props: {
     // route object
     item: {
       type: Object,
-      required: true
+      required: true,
     },
     basePath: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
 
-  data () {
+  data() {
     return {
-      childItem: null
+      childItem: null,
     }
   },
 
   methods: {
     // 路由处理 hidden、只有一个children
-    hasOnlyChild (children = [], item) {
-      let newChildren = children.filter(obj => {
+    hasOnlyChild(children = [], item) {
+      let newChildren = children.filter((obj) => {
         return obj.hidden ? false : true
       })
       if (newChildren.length === 1) {
@@ -66,8 +67,8 @@ export default {
     // 路由地址拼接
     resolvePath: function (router) {
       return path.join(this.basePath, router)
-    }
-  }
+    },
+  },
 }
 </script>
 

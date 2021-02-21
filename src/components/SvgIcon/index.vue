@@ -10,32 +10,34 @@ export default {
   props: {
     iconClass: {
       type: String,
-      required: true
+      required: true,
     },
     className: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
-    iconName () {
+    iconName() {
       return `#icon-${this.iconClass}`
     },
-    svgClass () {
+    svgClass() {
       if (this.className) {
         return 'svg-icon ' + this.className
       } else {
         return 'svg-icon'
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-  .svg-icon {
-    width: 1em;
-    height: 1em;
-    fill: currentColor;
-    overflow: hidden;
-  }
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  overflow: hidden;
+  vertical-align: -0.15em;
+  margin-right: 6px;
+}
 </style>

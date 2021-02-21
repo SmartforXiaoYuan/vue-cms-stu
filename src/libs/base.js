@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 // 表单重置
-export function resetForm (refName) {
+export function resetForm(refName) {
   if (this.$refs[refName]) {
     this.$refs[refName].resetFields()
   }
@@ -16,8 +16,9 @@ export function resetForm (refName) {
  * @param rootId 根Id 默认 0
  * @returns {{obj, list: Array}}
  */
-export function handleTree (data, id = 'id', parentId = 'parentId', children = 'children', rootId = 0) {
+export function handleTree(data, id = 'id', parentId = 'parentId', children = 'children', rootId = 0) {
   const obj = {}
+  // console.log(data)
   data.forEach(item => {
     item[children] = []
     obj[item[id]] = item
@@ -39,7 +40,7 @@ export function handleTree (data, id = 'id', parentId = 'parentId', children = '
 }
 
 // 回显数据字典
-export function selectDictLabel (datas, value) {
+export function selectDictLabel(datas, value) {
   const actions = []
   Object.keys(datas).map((key) => {
     if (datas[key].dictValue === ('' + value)) {
@@ -50,6 +51,6 @@ export function selectDictLabel (datas, value) {
   return actions.join('')
 }
 
-export function dateFormatter (row, column) {
+export function dateFormatter(row, column) {
   return dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss')
 }

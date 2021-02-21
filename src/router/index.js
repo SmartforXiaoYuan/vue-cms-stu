@@ -62,7 +62,7 @@ export const currencyRoutes = [
         component: (resolve) => require(['@/views/system/menu'], resolve),
         meta: {
           title: '菜单管理',
-          icon: 'el-icon-menu',
+          icon: 'el-icon-menu',//'el-icon-menu',
         },
       },
       {
@@ -71,8 +71,18 @@ export const currencyRoutes = [
         // component: () => import('@/views/system/role'),
         component: (resolve) => require(['@/views/system/dict'], resolve),
         meta: {
-          title: '字段管理',
+          title: '字典管理',
           icon: 'el-icon-document',
+        },
+      },
+      {
+        path: 'dept',
+        name: 'Dept',
+        // component: () => import('@/views/system/role'),
+        component: (resolve) => require(['@/views/system/dept'], resolve),
+        meta: {
+          title: '部门管理',
+          icon: 'el-icon-office-building',
         },
       },
       {

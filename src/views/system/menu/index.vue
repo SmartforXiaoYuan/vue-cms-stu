@@ -122,7 +122,7 @@ import IconSelect from '@/components/IconSelect'
 export default {
   name: 'Menu',
   components: { Treeselect, IconSelect },
-  data () {
+  data() {
     return {
       // 菜单表格树数据
       menuList: [],
@@ -149,16 +149,16 @@ export default {
       },
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   methods: {
     // 选择图标
-    selected (name) {
+    selected(name) {
       this.form.icon = name
     },
     /** 查询菜单列表 */
-    getList () {
+    getList() {
       getMenu().then((res) => {
         console.log(res.code)
         console.log(res)
@@ -166,7 +166,7 @@ export default {
       })
     },
     /** 转换菜单数据结构 */
-    normalizer (node) {
+    normalizer(node) {
       if (node.children && !node.children.length) {
         delete node.children
       }
@@ -177,7 +177,7 @@ export default {
       }
     },
     /** 查询菜单下拉树结构 */
-    getTreeselect () {
+    getTreeselect() {
       getMenu().then((res) => {
         console.log(res)
         console.log(res.data.rows)
@@ -191,19 +191,19 @@ export default {
       })
     },
     // 菜单状态字典翻译
-    statusFormat (row, column) {
+    statusFormat(row, column) {
       // if (row.menuType === 'F') {
       //   return ''
       // }
       return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
-    cancel () {
+    cancel() {
       this.open = false
       this.reset()
     },
     // 表单重置
-    reset () {
+    reset() {
       this.form = {
         id: undefined,
         parentId: 0,
@@ -218,11 +218,11 @@ export default {
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
-    handleQuery () {
+    handleQuery() {
       this.getList()
     },
     /** 新增按钮操作 */
-    handleAdd (row) {
+    handleAdd(row) {
       this.reset()
       this.getTreeselect()
       if (row != null) {
@@ -232,7 +232,7 @@ export default {
       this.title = '添加菜单'
     },
     /** 修改按钮操作 */
-    handleUpdate (row) {
+    handleUpdate(row) {
       this.reset()
       this.getTreeselect()
       getMenuById(row.id).then((res) => {
@@ -263,7 +263,7 @@ export default {
       })
     },
     /** 删除按钮操作 */
-    handleDelete (row) {
+    handleDelete(row) {
       this.$confirm('是否确认删除名称为"' + row.title + '"的数据项?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -276,7 +276,7 @@ export default {
           this.getList()
           this.$httpResponse('删除成功')
         })
-        .catch(function () { })
+        .catch(function () {})
     },
   },
 }
