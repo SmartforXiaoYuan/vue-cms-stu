@@ -116,7 +116,7 @@ import { getMenu } from '@/api/system/menu'
 
 export default {
   name: 'Role',
-  data() {
+  data () {
     return {
       // 选中数组
       ids: [],
@@ -176,13 +176,13 @@ export default {
       },
     }
   },
-  created() {
+  created () {
     this.getList()
     this.getMenuTreeselect()
     this.statusOptions = this.$statusOptions
   },
   methods: {
-    checkStatus(val) {
+    checkStatus (val) {
       // if (this.$store.state.user.userInfo.permissions.includes('*:*:*')) {
       //   return false
       // }
@@ -193,14 +193,19 @@ export default {
       // }
     },
     /** 查询角色列表 */
-    getList() {
+    getList () {
       getRole(this.queryParams).then((res) => {
         this.roleList = res.data.rows
         this.total = res.data.count
       })
     },
     /** 查询菜单树结构 */
-    getMenuTreeselect() {
+    getMenuTreeselect () {
+      //测试
+      getMenu().then((res) => {
+        this.menuOptions = this.handleTree(res.data.rows, 'id', 'parentId').tree
+      })
+
       // if (this.$store.state.user.userInfo.user.id === 1) {
       //   getMenu().then((res) => {
       //     this.menuOptions = this.handleTree(res.data.rows, 'id', 'parentId').tree
@@ -214,7 +219,7 @@ export default {
       // }
     },
     // 所有菜单节点数据
-    getMenuAllCheckedKeys() {
+    getMenuAllCheckedKeys () {
       // 目前被选中的菜单节点
       const checkedKeys = this.$refs.menu.getHalfCheckedKeys()
       // 半选中的菜单节点
@@ -223,7 +228,7 @@ export default {
       return checkedKeys
     },
     // 角色状态修改
-    handleStatusChange(row) {
+    handleStatusChange (row) {
       const text = row.status === '1' ? '启用' : '停用'
       this.$confirm('确认要"' + text + '""' + row.roleName + '"角色吗?', '警告', {
         confirmButtonText: '确定',
@@ -241,17 +246,17 @@ export default {
         })
     },
     // 取消按钮
-    cancel() {
+    cancel () {
       this.open = false
       this.reset()
     },
     // 取消按钮（数据权限）
-    cancelDataScope() {
+    cancelDataScope () {
       this.openDataScope = false
       this.reset()
     },
     // 表单重置
-    reset() {
+    reset () {
       if (this.$refs.menu !== undefined) {
         this.$refs.menu.setCheckedKeys([])
       }
@@ -268,30 +273,30 @@ export default {
       this.resetForm('form')
     },
     /** 搜索按钮操作 */
-    handleQuery() {
+    handleQuery () {
       this.queryParams.pageNum = 1
       this.getList()
     },
     /** 重置按钮操作 */
-    resetQuery() {
+    resetQuery () {
       this.dateRange = []
       this.resetForm('queryForm')
       this.handleQuery()
     },
     // 多选框选中数据
-    handleSelectionChange(selection) {
+    handleSelectionChange (selection) {
       this.ids = selection.map((item) => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd () {
       this.reset()
       this.open = true
       this.title = '添加角色'
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    handleUpdate (row) {
       this.reset()
       const id = row.id || this.ids
       getRoleById(id).then((res) => {
@@ -311,7 +316,7 @@ export default {
       })
     },
     /** 分配数据权限操作 */
-    handleDataScope(row) {
+    handleDataScope (row) {
       this.reset()
       getRoleById(row.id).then((res) => {
         this.form = res.data
@@ -354,7 +359,7 @@ export default {
       }
     },
     /** 删除按钮操作 */
-    handleDelete(row) {
+    handleDelete (row) {
       const roleIds = row.id || this.ids
       this.$confirm('是否确认删除角色编号为"' + roleIds + '"的数据项?', '警告', {
         confirmButtonText: '确定',
@@ -368,7 +373,7 @@ export default {
           this.getList()
           this.$httpResponse('删除成功')
         })
-        .catch(function () {})
+        .catch(function () { })
     },
   },
 }
