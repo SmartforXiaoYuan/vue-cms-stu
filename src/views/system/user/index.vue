@@ -145,3 +145,351 @@
 
   </div>
 </template>
+<script>
+import { listUser, getUser, delUser, addUser, updateUser } from '@/api/system/user'
+import { getRole } from '@/api/system/role'
+import { getToken } from '@/libs/auth'
+import { getDept } from '@/api/system/dept'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
+export default {
+  name: 'User',
+  components: { Treeselect },
+  data() {
+    return {
+      baseUrl: '',
+      uploadType: '1',
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 总条数
+      total: 0,
+      // 用户表格数据
+      userList: null,
+      // 弹出层标题
+      title: '',
+      // 部门树选项
+      deptOptions: undefined,
+      // 是否显示弹出层
+      open: false,
+      // 部门名称
+      deptName: undefined,
+      // 默认密码
+      initPassword: undefined,
+      // 状态数据字典
+      statusOptions: [],
+      // 性别状态字典
+      sexOptions: [],
+      // 角色选项
+      roleOptions: [],
+      // 表单参数
+      form: {},
+      defaultProps: {
+        children: 'children',
+        label: 'deptName',
+      },
+      // 用户导入参数
+      upload: {
+        // 是否显示弹出层（用户导入）
+        open: false,
+        // 弹出层标题（用户导入）
+        title: '',
+        // 是否禁用上传
+        isUploading: false,
+        // 是否更新已经存在的用户数据
+        updateSupport: 0,
+        // 设置上传的请求头部
+        headers: { Authorization: 'Bearer ' + getToken() },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + '/system/user/importData',
+        data: {
+          updateSupport: this.updateSupport ? 1 : 0,
+          userType: 'student',
+        },
+      },
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        userName: undefined,
+        status: undefined,
+        deptId: undefined,
+      },
+      // 表单校验
+      rules: {
+        userName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+        nickName: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+        deptId: [{ required: true, message: '归属部门不能为空', trigger: 'blur' }],
+        password: [{ required: true, message: '用户密码不能为空', trigger: 'blur' }],
+        roleIds: [{ required: true, message: '请选择角色', trigger: 'change' }],
+      },
+    }
+  },
+  watch: {
+    // 根据名称筛选部门树
+    deptName(val) {
+      this.$refs.tree.filter(val)
+    },
+  },
+  created() {
+    this.baseUrl = process.env.VUE_APP_BASE_API
+    this.getList()
+    this.getTreeselect()
+    this.getAllRole()
+
+    this.statusOptions = this.$statusOptions
+    // this.getDicts('sys_user_sex').then(res => {
+    //   this.sexOptions = res.data
+    // })
+  },
+  methods: {
+    checkStatus(val) {
+      if (this.$store.state.user.userInfo.permissions.includes('*:*:*')) {
+        return false
+      }
+      if (this.$store.state.user.userInfo.permissions.includes(val)) {
+        return false
+      } else {
+        return true
+      }
+    },
+    normalizer(node) {
+      return {
+        id: node.deptId,
+        children: node.children,
+        label: node.deptName,
+      }
+    },
+    /** 查询用户列表 */
+    getList() {
+      listUser(this.queryParams).then((res) => {
+        this.userList = res.data.rows
+        this.total = res.data.count
+      })
+    },
+    getAllRole() {
+      getRole().then((res) => {
+        this.roleOptions = res.data.rows
+        console.log(this.roleOptions)
+      })
+    },
+    /** 查询部门下拉树结构 */
+    getTreeselect() {
+      getDept().then((res) => {
+        const children = this.handleTree(
+          res.data.rows,
+          'deptId',
+          'parentId',
+          'children',
+          this.$store.state.user.userInfo.user.deptId
+        ).tree
+        const parent = res.data.rows.filter(
+          (item) => item.deptId === this.$store.state.user.userInfo.user.deptId
+        )
+        parent[0].children = children
+        this.deptOptions = parent
+        console.log(this.deptOptions)
+      })
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true
+      return data.deptName.indexOf(value) !== -1
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.deptId = data.deptId
+      this.getList()
+    },
+    // 用户状态修改
+    handleStatusChange(row) {
+      const text = row.status === '1' ? '启用' : '停用'
+      this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(async function () {
+          const { data } = await getUser(row.id)
+          const query = data
+          query.roleIds = data.roles.map((item) => item.id)
+          query.status = row.status
+          return updateUser(query)
+        })
+        .then(() => {
+          this.$httpResponse(text + '成功')
+        })
+        .catch(function () {
+          row.status = row.status === '0' ? '1' : '0'
+        })
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false
+      this.reset()
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: undefined,
+        deptId: undefined,
+        userName: undefined,
+        nickName: undefined,
+        password: undefined,
+        mobile: undefined,
+        email: undefined,
+        sex: undefined,
+        status: '1',
+        remark: undefined,
+        roleIds: [],
+      }
+      this.resetForm('form')
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1
+      this.getList()
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.queryParams.deptId = null
+      this.resetForm('queryForm')
+      this.handleQuery()
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map((item) => item.id)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset()
+      this.getTreeselect()
+      this.open = true
+      this.title = '添加用户'
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset()
+      this.getTreeselect()
+      const id = row.id || this.ids
+      getUser(id).then((res) => {
+        this.form = res.data
+        this.$set(
+          this.form,
+          'roleIds',
+          res.data.roles.map((item) => item.id)
+        )
+
+        this.open = true
+        this.title = '修改用户'
+      })
+    },
+    /** 重置密码按钮操作 */
+    handleResetPwd(row) {
+      this.$prompt('请输入"' + row.userName + '"的新密码', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      })
+        .then(({ value }) => {
+          const query = {
+            newPassword: value,
+          }
+          resetUserPwd(row.id, query).then((res) => {
+            this.$httpResponse('修改成功，新密码是：' + value)
+          })
+        })
+        .catch(() => {})
+    },
+    /** 提交按钮 */
+    submitForm: function () {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          if (this.form.id !== undefined) {
+            updateUser(this.form).then((res) => {
+              this.$httpResponse(res.message)
+              this.open = false
+              this.getList()
+            })
+          } else {
+            addUser(this.form).then((res) => {
+              this.$httpResponse(res.message)
+              this.open = false
+              this.getList()
+            })
+          }
+        }
+      })
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids
+      this.$confirm('是否确认删除用户?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(function () {
+          return delUser(ids)
+        })
+        .then(() => {
+          this.getList()
+          this.$httpResponse('删除成功')
+        })
+        .catch(function () {})
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所有用户数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(function () {
+          return exportUser(queryParams)
+        })
+        .then((res) => {
+          this.download(res.message)
+        })
+        .catch(function () {})
+    },
+    /** 导入按钮操作 */
+    handleImport() {
+      this.upload.title = '用户导入'
+      this.upload.open = true
+    },
+    /** 下载模板操作 */
+    importTemplate() {
+      importTemplate().then((res) => {
+        this.download(res.message)
+      })
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true
+    },
+    closeUploadDialog() {
+      this.uploadType = '1'
+      this.upload.updateSupport = 0
+    },
+    // 文件上传成功处理
+    handleFileSuccess(res, file, fileList) {
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert(res.msg, '导入结果', { dangerouslyUseHTMLString: true })
+      this.getList()
+    },
+    // 提交上传文件
+    submitFileForm() {
+      this.$refs.upload.submit()
+    },
+  },
+}
+</script>

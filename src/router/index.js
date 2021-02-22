@@ -18,6 +18,12 @@ Vue.use(VueRouter)
 /* common routers */
 export const currencyRoutes = [
   {
+    path: '/',
+    name: 'login',
+    redirect: '/login',
+    hidden: true,
+  },
+  {
     path: '/login',
     name: 'login',
     hidden: true,
@@ -92,22 +98,26 @@ export const currencyRoutes = [
         component: (resolve) => require(['@/views/system/role'], resolve),
         meta: {
           title: '角色管理',
-          icon: 'el-icon-s-custom',
+          icon: 'el-icon-s-check',
         },
       },
       {
         path: 'user',
+        name: 'User',
         component: (resolve) => require(['@/views/system/user'], resolve),
-        hidden: false,
-        children: [
-          {
-            path: 'profile',
-            component: (resolve) =>
-              require(['@/views/system/user/index'], resolve),
-            name: 'Profile',
-            meta: { title: '个人中心', icon: 'user', menuType: 'C' },
-          },
-        ],
+        // children: [
+        //   {
+        //     path: 'profile',
+        //     component: (resolve) =>
+        //       require(['@/views/system/user/index'], resolve),
+        //     name: 'Profile',
+        //     meta: { title: '个人中心', icon: 'user', menuType: 'C' },
+        //   },
+        // ],
+        meta: {
+          title: '用户管理',
+          icon: 'el-icon-user',
+        },
       },
     ],
   },
