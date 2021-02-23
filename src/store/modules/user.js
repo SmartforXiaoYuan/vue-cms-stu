@@ -1,6 +1,7 @@
 import { _login, _logout } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/libs/auth'
 import { Message } from 'element-ui'
+import { getInfo } from '@/api/system/user'
 
 const user = {
   state: {
@@ -63,6 +64,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo()
           .then((res) => {
+            console.log('获取用户信息')
             console.log(res)
             const userInfo = res.data
             commit('SET_USERINFO', userInfo)

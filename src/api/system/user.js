@@ -1,5 +1,14 @@
 import axios from '@/libs/api.request'
 
+// 查询
+export const getInfo = (params = {}) => {
+  return axios.request({
+    url: '/system/getInfo',
+    method: 'get',
+    params: params,
+  })
+}
+
 // 查询列表
 export const listUser = (params = {}) => {
   return axios.request({
@@ -29,7 +38,7 @@ export const addUser = (info) => {
   return axios.request({
     url: '/user',
     method: 'post',
-    data: info
+    data: info,
   })
 }
 
@@ -38,6 +47,6 @@ export const updateUser = (info) => {
   return axios.request({
     url: '/user/' + info.id,
     method: 'put',
-    data: info
+    data: info,
   })
 }

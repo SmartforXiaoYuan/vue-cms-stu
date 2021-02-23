@@ -68,7 +68,7 @@ export const currencyRoutes = [
         component: (resolve) => require(['@/views/system/menu'], resolve),
         meta: {
           title: '菜单管理',
-          icon: 'el-icon-menu',//'el-icon-menu',
+          icon: 'el-icon-menu', //'el-icon-menu',
         },
       },
       {
@@ -187,17 +187,22 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         try {
-          const roles = await store.dispatch('getUserRoles')
-          const addRoutes = await store.dispatch(
-            'permission/getAsyncRoutes',
-            roles
-          )
-          console.log(addRoutes)
-          router.addRoutes(addRoutes)
-          next({
-            ...to,
-            replace: true,
-          })
+          if (!store.getters.userInfo) {
+            store.dispatch('GetInfo').then((res) => {
+              console.log(res)
+            })
+            const roles = await store.dispatch('getUserRoles')
+            const addRoutes = await store.dispatch(
+              'permission/getAsyncRoutes',
+              roles
+            )
+            console.log(addRoutes)
+            router.addRoutes(addRoutes)
+            next({
+              ...to,
+              replace: true,
+            })
+          }
         } catch (err) {
           throw err
         }
